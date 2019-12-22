@@ -6,6 +6,10 @@ Action = {
     "MULTIPLY": ["02", "2"],
     "INPUT": ["03", "3"],
     "OUTPUT": ["04", "4"],
+    "JUMP-IF-TRUE": ["05", "5"],
+    "JUMP-IF-FALSE": ["06", "6"],
+    "IS-LESS": ["07", "7"],
+    "IS-EQUAL": ["08", "8"],
     "STOP": "99"
 }
 
@@ -56,7 +60,7 @@ def intcode_computer(intcode):
 
             intcode[output_position] = str(noun + verb)
 
-            index = index+4
+            index = index + 4
 
         elif opcode in Action["MULTIPLY"]:
             try:
@@ -92,7 +96,6 @@ def intcode_computer(intcode):
 
             index = index + 2
 
-
         elif opcode in Action["OUTPUT"]:
             try:
                 noun_parameter_mode = parameter_modes[-1]
@@ -107,8 +110,109 @@ def intcode_computer(intcode):
 
             index = index + 2
 
-        else:
-            index = index + 1
+        elif opcode in Action["JUMP-IF-TRUE"]:
+            try:
+                noun_parameter_mode = parameter_modes[-1]
+            except IndexError:
+                noun_parameter_mode = "0"
+            try:
+                verb_parameter_mode = parameter_modes[-2]
+            except IndexError:
+                verb_parameter_mode = "0"
+
+            if noun_parameter_mode == ParameterMode["POSITION"]:
+                noun = int(intcode[int(intcode[index + 1])])
+            elif noun_parameter_mode == ParameterMode["IMMEDIATE"]:
+                noun = int(intcode[index + 1])
+
+            if verb_parameter_mode == ParameterMode["POSITION"]:
+                verb = int(intcode[int(intcode[index + 2])])
+            elif verb_parameter_mode == ParameterMode["IMMEDIATE"]:
+                verb = int(intcode[index + 2])
+
+            if noun == 0:
+                index = index + 3
+            else:
+                index = verb
+
+        elif opcode in Action["JUMP-IF-FALSE"]:
+            try:
+                noun_parameter_mode = parameter_modes[-1]
+            except IndexError:
+                noun_parameter_mode = "0"
+            try:
+                verb_parameter_mode = parameter_modes[-2]
+            except IndexError:
+                verb_parameter_mode = "0"
+
+            if noun_parameter_mode == ParameterMode["POSITION"]:
+                noun = int(intcode[int(intcode[index + 1])])
+            elif noun_parameter_mode == ParameterMode["IMMEDIATE"]:
+                noun = int(intcode[index + 1])
+
+            if verb_parameter_mode == ParameterMode["POSITION"]:
+                verb = int(intcode[int(intcode[index + 2])])
+            elif verb_parameter_mode == ParameterMode["IMMEDIATE"]:
+                verb = int(intcode[index + 2])
+
+            if noun == 0:
+                index = verb
+            else:
+                index = index + 3
+
+        elif opcode in Action["IS-LESS"]:
+            try:
+                noun_parameter_mode = parameter_modes[-1]
+            except IndexError:
+                noun_parameter_mode = "0"
+            try:
+                verb_parameter_mode = parameter_modes[-2]
+            except IndexError:
+                verb_parameter_mode = "0"
+
+            if noun_parameter_mode == ParameterMode["POSITION"]:
+                noun = int(intcode[int(intcode[index + 1])])
+            elif noun_parameter_mode == ParameterMode["IMMEDIATE"]:
+                noun = int(intcode[index + 1])
+
+            if verb_parameter_mode == ParameterMode["POSITION"]:
+                verb = int(intcode[int(intcode[index + 2])])
+            elif verb_parameter_mode == ParameterMode["IMMEDIATE"]:
+                verb = int(intcode[index + 2])
+
+            if noun < verb:
+                intcode[int(intcode[index + 3])] = "1"
+            else:
+                intcode[int(intcode[index + 3])] = "0"
+
+            index = index + 4
+
+        elif opcode in Action["IS-EQUAL"]:
+            try:
+                noun_parameter_mode = parameter_modes[-1]
+            except IndexError:
+                noun_parameter_mode = "0"
+            try:
+                verb_parameter_mode = parameter_modes[-2]
+            except IndexError:
+                verb_parameter_mode = "0"
+
+            if noun_parameter_mode == ParameterMode["POSITION"]:
+                noun = int(intcode[int(intcode[index + 1])])
+            elif noun_parameter_mode == ParameterMode["IMMEDIATE"]:
+                noun = int(intcode[index + 1])
+
+            if verb_parameter_mode == ParameterMode["POSITION"]:
+                verb = int(intcode[int(intcode[index + 2])])
+            elif verb_parameter_mode == ParameterMode["IMMEDIATE"]:
+                verb = int(intcode[index + 2])
+
+            if noun == verb:
+                intcode[int(intcode[index + 3])] = "1"
+            else:
+                intcode[int(intcode[index + 3])] = "0"
+
+            index = index + 4
 
 with open("input.txt", "r") as input_file:
     file_intcode = input_file.readline()
