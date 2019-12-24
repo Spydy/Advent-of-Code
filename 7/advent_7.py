@@ -2,6 +2,7 @@ from intcode_computer import intcode_computer
 
 def amplifier_controller(intcode):
     outputs = {}
+
     for a in range(5):
         a_output = intcode_computer(intcode, a, 0)
         for b in range(5):
