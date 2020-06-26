@@ -1,3 +1,5 @@
+# Version 9
+
 Action = {
     "ADD": ["01", "1"],
     "MULTIPLY": ["02", "2"],
@@ -7,12 +9,14 @@ Action = {
     "JUMP-IF-FALSE": ["06", "6"],
     "IS-LESS": ["07", "7"],
     "IS-EQUAL": ["08", "8"],
+    "ADJUST-RELATIVE-BASE": ["09", "9"],
     "STOP": "99"
 }
 
 ParameterMode = {
     "POSITION": "0",
-    "IMMEDIATE": "1"
+    "IMMEDIATE": "1",
+    "RELATIVE": "2"
 }
 
 
